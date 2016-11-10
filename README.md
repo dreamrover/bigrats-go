@@ -3,7 +3,7 @@
 
 The official site of Bigrats(硕鼠下载器) is http://www.flvcd.com/, which only provides Windows and Mac OSX version.
 
-This project is the Linux version of Bigrats video downloader written in [golang](https://golang.org/) with GUI by deploying [GoQt](https://github.com/visualfc/goqt). It will support Mac OSX in the future. This project has nothing to do with flvcd.com.
+This project is the Linux version of Bigrats video downloader written in [**Golang**](https://golang.org/) with GUI by deploying [GoQt](https://github.com/visualfc/goqt). It will support Mac OSX in the future. This project has nothing to do with flvcd.com.
 
 ## usage
 The usage of bigrats-go is quite similar with the Windows version except that it uses [**avidemux**](http://fixounet.free.fr/avidemux/) to merge video segments.
