@@ -14,14 +14,14 @@ The usage of bigrats-go is quite similar with the Windows version except that it
     
     >chmod +x wrapper
 
-    >Debian: sudo cp lib/* /usr/lib
+    >Debian: sudo cp -d lib/* /usr/lib
     
-    >CentOS/RHEL: sudo cp lib/* /usr/lib64
+    >CentOS/RHEL: sudo cp -d lib/* /usr/lib64
 
     If you build from source, you should also build [wrapper](https://github.com/dreamrover/wrapper). And put it togather with bigrats.
 2. Install Qt runtime libraries.
 3. Install Firefox browser and flvcd-helper extension from https://addons.mozilla.org/zh-CN/firefox/addon/flvcd-helper/.
-4. Edit ~/.mozilla/firefox/xxxxxxxx.default/mimeTypes.rdf, 
+4. Edit ~/.mozilla/firefox/xxxxxxxx.default/mimeTypes.rdf, ('xxxxxxxx' may be deferent in deferent systems)
 
     add a new line     
     >`<RDF:li RDF:resource="urn:scheme:bigrats"/>` 
@@ -37,13 +37,16 @@ The usage of bigrats-go is quite similar with the Windows version except that it
      >`</RDF:Description>`<br>
      >`<RDF:Description RDF:about="urn:handler:local:/opt/bigrats-go/bigrats" NC:prettyName="bigrats" NC:path="/opt/bigrats-go/bigrats" />`    
     
-5. Install [**avidemux**](http://fixounet.free.fr/avidemux/) for merging video segments. Avidemux is not included in the default software repositories of Debian and CentOS/RHEL.
+    Open Firefox--Preferences--Applications, choose bigrats binary file in the 'Action' column:
+    ![image](https://github.com/dreamrover/screenshots/blob/master/settings.png)
+    
+5. Install [**avidemux**](http://fixounet.free.fr/avidemux/) for merging video segments. Avidemux is not included in the default software repositories of Debian or CentOS/RHEL.
 
     >Debian users should add deb-multimedia repository by the instructions in https://deb-multimedia.org/ first, 
-    and run: sudo apt-get install avidemux
+    and run: sudo apt-get install avidemux avidemux-cli
     
     >CentOS/RHEL users should add Nux repository by the instructions in http://li.nux.ro/repos.html first, 
-    and run: sudo yum install avidemux
+    and run: sudo yum install avidemux avidemux-cli
     
 6. Now you can use it like the official Windows version.
     
