@@ -84,14 +84,14 @@ func gui() {
 
 	w.checkBox[0] = ui.NewCheckBox()
 	w.checkBox[0].SetText("Auto Merge")
-	merger, err = exec.LookPath("avidemux")
+	merger, err = exec.LookPath(avidemux)
 	if err != nil {
 		automerge = false
 	}
 	w.checkBox[0].SetChecked(automerge)
 	w.checkBox[0].OnClickedEx(func(checked bool) {
 		if checked {
-			merger, err = exec.LookPath("avidemux")
+			merger, err = exec.LookPath(avidemux)
 			if err != nil {
 				w.Msgbox(err.Error())
 			}
