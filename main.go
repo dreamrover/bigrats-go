@@ -18,6 +18,7 @@ import (
 const (
 	seglen = 1452
 	N      = 32
+	avidemux = "avidemux3_cli"
 )
 
 var chRow chan rowinfo
