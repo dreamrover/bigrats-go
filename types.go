@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"strconv"
 )
 
@@ -42,12 +41,6 @@ type taskinfo struct {
 type backinfo struct {
 	seg    *seginfo
 	status int
-}
-
-type mrgtool struct {
-	wr  io.WriteCloser
-	rd  io.ReadCloser
-	err io.ReadCloser
 }
 
 type size int64
