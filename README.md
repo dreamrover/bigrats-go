@@ -8,17 +8,15 @@ This project is the Linux version of Bigrats video downloader written in [**Gola
 ## usage
 The usage of bigrats-go is quite similar with the Windows version except that it uses [**avidemux**](http://fixounet.free.fr/avidemux/) to merge video segments.
 
-1. Download bigrats-go binaries(for x86_64 only) from https://github.com/dreamrover/bigrats-go/releases and extract, e.g. to /opt. Change to the directory and:
+1. Download bigrats-go binaries(x86_64 only) from https://github.com/dreamrover/bigrats-go/releases and extract, e.g. to /opt. Change to the directory and:
 
     >chmod +x bigrats
-    
-    >chmod +x wrapper
 
     >Debian: sudo cp -d lib/* /usr/lib
     
     >CentOS/RHEL: sudo cp -d lib/* /usr/lib64
 
-    If you build from source, you should also build [wrapper](https://github.com/dreamrover/wrapper). And put it togather with bigrats.
+    If you build from source, building GoQt with **Qt5** is highly recommended to prevent crash on receiving signals.
 2. Install Qt runtime libraries.
 3. Install Firefox browser and flvcd-helper extension from https://addons.mozilla.org/zh-CN/firefox/addon/flvcd-helper/.
 4. Edit ~/.mozilla/firefox/xxxxxxxx.default/mimeTypes.rdf, ('xxxxxxxx' may be deferent in deferent systems)
