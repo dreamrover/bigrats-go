@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -167,11 +168,11 @@ func fetchSegment(seg *seginfo, back chan backinfo) (n int64, err error) {
 	return
 }
 
-func mergeSegs(task *taskinfo, format string, joiner *mrgtool, del bool) (err error) {
+func (task *taskinfo) mergeSegs(format string, delsegs bool) error {
 	var args []string
 
 	if len(task.segs) == 1 && format == "Original" {
-		if len(task.segs) == 1 && task.title+task.suffix != task.segs[0].name {
+		if task.segs[0].name != task.title+task.suffix {
 			return os.Rename(task.dir+task.segs[0].name, task.dir+task.title+task.suffix)
 		}
 		return nil
@@ -186,59 +187,28 @@ func mergeSegs(task *taskinfo, format string, joiner *mrgtool, del bool) (err er
 	if format == "Original" {
 		format = task.suffix
 	}
+	suffix := format
 	format = format[1:]
 	if format == "mp4" {
 		format = "mp4v2"
 	}
 	args = append(args, format)
 	args = append(args, "--save")
-	args = append(args, task.dir+task.title)
-	args = append(args, fmt.Sprintf("%v", del))
-	for _, arg := range args {
-		_, err = fmt.Fprintln(joiner.wr, arg)
-		if err != nil {
-			return
-		}
-	}
-	_, err = fmt.Fprint(joiner.wr, "\n")
-	return
-}
+	args = append(args, task.dir+task.title+suffix)
 
-/*
-func delSegs(task *taskinfo, format string) (err error) {
-	var size, sum int64
-	var file string
-	var info os.FileInfo
+	cmd := exec.Command(avidemux, args...)
+	err := cmd.Run()
+	if err != nil {
+		return err
+	}
 
-	if format == "Original" {
-		file = task.dir + task.title + task.suffix
-	} else {
-		file = task.dir + task.title + format
-	}
-	for _, seg := range task.segs[:len(task.segs)-1] {
-		info, err = os.Stat(task.dir + seg.name)
-		if err != nil {
-			return
-		}
-		sum += info.Size()
-	}
-	for i := 0; i < len(task.segs); i++ {
-		time.Sleep(time.Second)
-		info, err = os.Stat(file)
-		if err != nil {
-			continue
-		}
-		if size != 0 && size == info.Size() && size > sum {
-			for _, seg := range task.segs {
-				e := os.Remove(task.dir + seg.name)
-				if e != nil {
-					err = e
-				}
+	if delsegs {
+		for _, seg := range task.segs {
+			e := os.Remove(task.dir + seg.name)
+			if e != nil {
+				err = e
 			}
-			return
 		}
-		size = info.Size()
 	}
-	return errors.New("Error deleting segments.")
+	return err
 }
-*/
