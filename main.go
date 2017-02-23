@@ -6,7 +6,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"os/exec"
 	"os/user"
 	"path/filepath"
 	"strconv"
@@ -16,8 +15,8 @@ import (
 )
 
 const (
-	seglen = 1452
-	N      = 32
+	seglen   = 1452
+	N        = 32
 	avidemux = "avidemux3_cli"
 )
 
@@ -28,7 +27,6 @@ var chMsg chan string
 var chTask chan *taskinfo
 var chMrg chan string
 
-//var chSig chan os.Signal
 var threads int32 = 5
 var automerge bool = true
 var merger string
@@ -67,12 +65,10 @@ func init() {
 	chMsg = make(chan string, N)
 	chTask = make(chan *taskinfo, N)
 	chMrg = make(chan string, N)
-	//chSig = make(chan os.Signal, N)
 }
 
 func main() {
 	var url string
-	//signal.Notify(chSig, syscall.SIGCHLD)
 	if len(os.Args) > 1 && strings.HasPrefix(os.Args[1], "bigrats://") {
 		url = "http://www.flvcd.com/diy/" + os.Args[1][10:] + ".htm"
 	}
@@ -142,7 +138,6 @@ func runTask(url string) {
 func scheduler() {
 	var tasks []*taskinfo
 	var active int32
-	var joiner *mrgtool
 
 	feedback := make(chan backinfo, N)
 	sched := func() {
@@ -203,40 +198,14 @@ func scheduler() {
 				}
 				if automerge {
 					chMrg <- "Merging " + seg.task.title
-					if joiner == nil {
-						joiner = new(mrgtool)
-						wrapper := filepath.Dir(os.Args[0]) + "/wrapper"
-						_, err := os.Stat(wrapper)
+					go func() {
+						err := seg.task.mergeSegs(container, autodel)
 						if err != nil {
 							chMrg <- err.Error()
-							break
+						} else {
+							chMrg <- ""
 						}
-						cmd := exec.Command(wrapper, merger)
-						joiner.wr, _ = cmd.StdinPipe()
-						joiner.rd, _ = cmd.StdoutPipe()
-						joiner.err, _ = cmd.StderrPipe()
-						err = cmd.Start()
-						if err != nil {
-							chMrg <- err.Error()
-							break
-						}
-					}
-					err := mergeSegs(seg.task, container, joiner, autodel)
-					if err != nil {
-						chMrg <- err.Error()
-						break
-					} else {
-						chMrg <- ""
-					}
-
-					/*if autodel && (len(seg.task.segs) > 1 || container != "Original") {
-						go func() {
-							err := delSegs(seg.task, container)
-							if err != nil {
-								chMrg <- err.Error()
-							}
-						}()
-					}*/
+					}()
 				}
 			}
 		}
