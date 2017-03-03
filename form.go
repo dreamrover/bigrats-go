@@ -243,10 +243,7 @@ func gui() {
 				w.Msgbox(msg)
 			case merge := <-chMrg:
 				w.label[2].SetText(merge)
-			/*case sig := <-chSig:
-			w.Msgbox(sig.String())*/
 			default:
-				//fmt.Println("timer!!!")
 				if speed > 0 {
 					w.label[3].SetText(speed.String())
 					speed = 0
