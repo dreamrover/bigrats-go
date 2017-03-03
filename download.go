@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"crypto/md5"
 	"errors"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -84,23 +83,29 @@ func parseURL(url string) (*taskinfo, error) {
 	return &task, nil
 }
 
-func fetchSegment(seg *seginfo, back chan backinfo) (n int64, err error) {
+func fetchSegment(seg *seginfo, back chan *seginfo) (n int64, err error) {
+	seg.status = DOWN
+
 	rinfo := rowinfo{seg, 0, 0, 0, "-", "Connecting"}
 	chRow <- rinfo
+
+	defer func() {
+		chRow <- rinfo
+		back <- seg
+	}()
 
 	resp, err := http.Get(seg.link)
 	if err != nil {
 		log.Println(err)
 		rinfo.status = "Error"
-		chRow <- rinfo
-		back <- backinfo{seg, ERROR}
+		seg.status = ERROR
 		return
 	}
-	fmt.Println("=============================================================")
+	/*fmt.Println("=============================================================")
 	fmt.Println(seg.name, resp.Status, resp.Proto, resp.ContentLength)
 	for k, v := range resp.Header {
 		fmt.Println(k, v)
-	}
+	}*/
 	defer resp.Body.Close()
 	length := resp.ContentLength
 	rinfo.size = size(length)
@@ -114,16 +119,14 @@ func fetchSegment(seg *seginfo, back chan backinfo) (n int64, err error) {
 		rinfo.speed = -1
 		rinfo.eta = "0s"
 		rinfo.status = "Finished"
-		chRow <- rinfo
-		back <- backinfo{seg, DONE}
+		seg.status = DONE
 		return
 	}
 	file, err := os.Create(seg.task.dir + seg.name)
 	if err != nil {
 		log.Println(err)
 		rinfo.status = "Error"
-		chRow <- rinfo
-		back <- backinfo{seg, ERROR}
+		seg.status = ERROR
 		return
 	}
 	defer file.Close()
@@ -160,12 +163,20 @@ func fetchSegment(seg *seginfo, back chan backinfo) (n int64, err error) {
 			rinfo.speed = -1
 			rinfo.eta = "0s"
 			rinfo.status = "Finished"
-			chRow <- rinfo
-			back <- backinfo{seg, DONE}
+			seg.status = DONE
 			break
 		}
 	}
 	return
+}
+
+func (task *taskinfo) done() bool {
+	for _, seg := range task.segs {
+		if seg.status != DONE {
+			return false
+		}
+	}
+	return true
 }
 
 func (task *taskinfo) mergeSegs(format string, delsegs bool) error {
