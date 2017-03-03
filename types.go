@@ -38,11 +38,6 @@ type taskinfo struct {
 	tid     [16]byte
 }
 
-type backinfo struct {
-	seg    *seginfo
-	status int
-}
-
 type size int64
 type rate int64
 
