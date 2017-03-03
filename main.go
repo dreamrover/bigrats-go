@@ -139,7 +139,7 @@ func scheduler() {
 	var tasks []*taskinfo
 	var active int32
 
-	feedback := make(chan backinfo, N)
+	chseg := make(chan *seginfo, N)
 	sched := func() {
 		if active >= threads {
 			return
@@ -149,8 +149,7 @@ func scheduler() {
 				if seg.status != READY {
 					continue
 				}
-				go fetchSegment(seg, feedback)
-				seg.status = DOWN
+				go fetchSegment(seg, chseg)
 				active++
 				if active >= threads {
 					return
@@ -178,35 +177,21 @@ func scheduler() {
 				}
 			}
 			sched()
-		case b := <-feedback:
-			b.seg.status = b.status
-			if b.status == DONE || b.status == ERROR {
+		case seg := <-chseg:
+			if seg.status == DONE || seg.status == ERROR {
 				active--
 				sched()
 			}
-			if b.status == DONE {
-				var seg *seginfo
-				merge := true
-				for _, seg = range b.seg.task.segs {
-					if seg.status != DONE {
-						merge = false
-						break
+			if seg.status == DONE && seg.task.done() && automerge {
+				chMrg <- "Merging " + seg.task.title
+				go func() {
+					err := seg.task.mergeSegs(container, autodel)
+					if err != nil {
+						chMrg <- err.Error()
+					} else {
+						chMrg <- ""
 					}
-				}
-				if !merge {
-					break
-				}
-				if automerge {
-					chMrg <- "Merging " + seg.task.title
-					go func() {
-						err := seg.task.mergeSegs(container, autodel)
-						if err != nil {
-							chMrg <- err.Error()
-						} else {
-							chMrg <- ""
-						}
-					}()
-				}
+				}()
 			}
 		}
 	}
