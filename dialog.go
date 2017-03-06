@@ -74,9 +74,7 @@ func (f *Form) GetDir(scriptURL string) {
 		filedialog.Show()
 	})
 	filedialog.OnAccepted(func() {
-		//filedialog.OnFinished(func(i int32) {
 		dir = filedialog.Directory().AbsolutePath()
-		//comboBox.AddItem(dir)
 		n := comboBox.FindText(dir)
 		if n >= 0 {
 			comboBox.SetCurrentIndex(n)
@@ -123,5 +121,6 @@ func (f *Form) GetDir(scriptURL string) {
 	dialog.SetLayout(vbox)
 	dialog.SetFixedSizeWithWidthHeight(450, 200)
 	dialog.SetWindowFlags(dialog.WindowFlags() | ui.Qt_WindowStaysOnTopHint)
+
 	dialog.Show()
 }

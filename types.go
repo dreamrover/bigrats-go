@@ -5,15 +5,6 @@ import (
 	"strconv"
 )
 
-type rowinfo struct {
-	seg    *seginfo
-	size   size
-	down   size
-	speed  rate
-	eta    string
-	status string
-}
-
 type urldir struct {
 	url string
 	dir string
@@ -25,6 +16,10 @@ type seginfo struct {
 	link   string
 	sid    [16]byte
 	status int
+	size   size
+	down   size
+	speed  rate
+	eta    string
 	task   *taskinfo
 }
 

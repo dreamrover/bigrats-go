@@ -70,34 +70,31 @@ func parseURL(url string) (*taskinfo, error) {
 		name = string(bytes.TrimPrefix(regN.Find(slice), []byte("<N>")))
 		site = string(bytes.TrimPrefix(regP.Find(slice), []byte("<P>")))
 		link = string(bytes.TrimPrefix(regU.Find(slice), []byte("<U>")))
-		//fmt.Println(name, site, link)
 		name += filepath.Ext(link)
 		sid := md5.Sum([]byte(link))
-		task.segs = append(task.segs, &seginfo{name, site, link, sid, READY, &task})
+		task.segs = append(task.segs, &seginfo{name, site, link, sid, READY, -1, 0, -1, "-", &task})
 	}
 	task.suffix = filepath.Ext(task.segs[0].link)
 	if task.suffix == "" {
 		return nil, errors.New("Script error: unsupported video format")
 	}
-	//fmt.Println(task.suffix)
 	return &task, nil
 }
 
 func fetchSegment(seg *seginfo, back chan *seginfo) (n int64, err error) {
-	seg.status = DOWN
-
-	rinfo := rowinfo{seg, 0, 0, 0, "-", "Connecting"}
-	chRow <- rinfo
-
 	defer func() {
-		chRow <- rinfo
 		back <- seg
 	}()
+
+	seg.status = DOWN
+	seg.size = 0
+	seg.down = 0
+	seg.speed = 0
+	back <- seg
 
 	resp, err := http.Get(seg.link)
 	if err != nil {
 		log.Println(err)
-		rinfo.status = "Error"
 		seg.status = ERROR
 		return
 	}
@@ -107,25 +104,26 @@ func fetchSegment(seg *seginfo, back chan *seginfo) (n int64, err error) {
 		fmt.Println(k, v)
 	}*/
 	defer resp.Body.Close()
+	if resp.StatusCode >= 400 {
+		err = errors.New(resp.Status)
+		seg.status = ERROR
+		return
+	}
 	length := resp.ContentLength
-	rinfo.size = size(length)
-	rinfo.status = "Downloading"
-	chRow <- rinfo
+	seg.size = size(length)
 
 	info, err := os.Stat(seg.task.dir + seg.name)
 	if err == nil && info.Size() == length {
 		n = length
-		rinfo.down = size(n)
-		rinfo.speed = -1
-		rinfo.eta = "0s"
-		rinfo.status = "Finished"
+		seg.down = size(n)
+		seg.speed = -1
 		seg.status = DONE
+		seg.eta = "0s"
 		return
 	}
 	file, err := os.Create(seg.task.dir + seg.name)
 	if err != nil {
 		log.Println(err)
-		rinfo.status = "Error"
 		seg.status = ERROR
 		return
 	}
@@ -149,20 +147,19 @@ func fetchSegment(seg *seginfo, back chan *seginfo) (n int64, err error) {
 				dura, _ = time.ParseDuration(t)
 				eta = dura.String()
 			}
-			rinfo.down = size(n)
-			rinfo.speed = rate(speed)
-			rinfo.eta = eta
-			chRow <- rinfo
+			seg.down = size(n)
+			seg.speed = rate(speed)
+			seg.eta = eta
+			back <- seg
 			n0 = n
 		default:
 		}
 		if n == length || err == io.EOF {
 			//fmt.Printf("\rFinished %d.             \n", length)
 			ticker.Stop()
-			rinfo.down = size(n)
-			rinfo.speed = -1
-			rinfo.eta = "0s"
-			rinfo.status = "Finished"
+			seg.down = size(n)
+			seg.speed = -1
+			seg.eta = "0s"
 			seg.status = DONE
 			break
 		}
@@ -170,7 +167,7 @@ func fetchSegment(seg *seginfo, back chan *seginfo) (n int64, err error) {
 	return
 }
 
-func (task *taskinfo) done() bool {
+func (task *taskinfo) Done() bool {
 	for _, seg := range task.segs {
 		if seg.status != DONE {
 			return false
@@ -202,6 +199,8 @@ func (task *taskinfo) mergeSegs(format string, delsegs bool) error {
 	format = format[1:]
 	if format == "mp4" {
 		format = "mp4v2"
+	} else if format == "flv" {
+		format = "flv1"
 	}
 	args = append(args, format)
 	args = append(args, "--save")

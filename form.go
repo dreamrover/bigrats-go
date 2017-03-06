@@ -21,18 +21,11 @@ type Form struct {
 	comboBox   *ui.QComboBox
 	table      [2]*Table
 	tabWidget  *ui.QTabWidget
-	button     [6]*ui.QPushButton
-	/*pauseButton  *ui.QPushButton
-	resumeButton *ui.QPushButton
-	startButton  *ui.QPushButton
-	stopButton   *ui.QPushButton
-	removeButton *ui.QPushButton
-	clearButton  *ui.QPushButton*/
-	timer *ui.QTimer
+	timer      *ui.QTimer
 }
 
 func gui() {
-	var hbox [5]*ui.QHBoxLayout
+	var hbox [2]*ui.QHBoxLayout
 	var vbox [3]*ui.QVBoxLayout
 	var err error
 
@@ -124,6 +117,12 @@ func gui() {
 	w.comboBox.AddItems([]string{"Original", ".mp4", ".flv", ".avi", ".mkv"})
 	w.comboBox.SetCurrentIndex(cindex)
 	w.comboBox.SetEditable(false)
+	container = w.comboBox.ItemText(cindex)
+	if container == "" {
+		cindex = 0
+		w.comboBox.SetCurrentIndex(cindex)
+		container = w.comboBox.ItemText(cindex)
+	}
 	if !w.checkBox[0].IsChecked() {
 		w.comboBox.SetEnabled(false)
 	}
@@ -152,23 +151,6 @@ func gui() {
 		w.Msgbox(strconv.Itoa(int(indexes[0].Row())))
 	})*/
 
-	/*for i:=range w.button {
-		w.button[i] = ui.NewPushButton()
-	}
-	w.button[0].SetText("Pause")
-	w.button[0].OnClicked(func() {})
-	w.button[1].SetText("Resume")
-	w.button[1].OnClicked(func() {})
-	w.button[2].SetText("Pause All")
-	w.button[2].OnClicked(func() {})
-	w.button[3].SetText("Resume All")
-	w.button[3].OnClicked(func() {})
-
-	w.button[4].SetText("Remove")
-	w.button[4].OnClicked(func() {})
-	w.button[5].SetText("Clear")
-	w.button[5].OnClicked(func() {})*/
-
 	hbox[0].AddWidget(w.taskButton)
 	hbox[0].AddWidget(w.label[0])
 	hbox[0].AddWidget(w.spinBox)
@@ -178,18 +160,9 @@ func gui() {
 	hbox[0].AddWidget(w.comboBox)
 	hbox[0].AddStretch()
 
-	/*hbox[3].AddWidget(w.button[0])
-	hbox[3].AddWidget(w.button[1])
-	hbox[3].AddWidget(w.button[2])
-	hbox[3].AddWidget(w.button[3])
-	hbox[3].AddStretch()*/
-
-	hbox[4].AddWidget(w.label[2])
-	hbox[4].AddWidget(w.label[3])
-	hbox[4].SetAlignment(ui.Qt_AlignRight)
-
-	hbox[1].AddLayout(hbox[3])
-	hbox[1].AddLayout(hbox[4])
+	hbox[1].AddWidget(w.label[2])
+	hbox[1].AddWidget(w.label[3])
+	hbox[1].SetAlignment(ui.Qt_AlignRight)
 
 	vbox[1].AddWidget(w.table[0])
 	vbox[1].AddLayout(hbox[1])
@@ -197,12 +170,7 @@ func gui() {
 	frame := ui.NewFrame()
 	frame.SetLayout(vbox[1])
 
-	/*hbox[2].AddWidget(w.button[4])
-	hbox[2].AddWidget(w.button[5])
-	hbox[2].AddStretch()*/
-
 	vbox[2].AddWidget(w.table[1])
-	vbox[2].AddLayout(hbox[2])
 
 	widget := ui.NewWidget()
 	widget.SetLayout(vbox[2])
@@ -229,13 +197,14 @@ func gui() {
 		var speed rate
 		for {
 			select {
-			case rinfo := <-chRow:
-				w.table[0].Refresh(rinfo)
-				speed += rinfo.speed
-				if rinfo.status == "Finished" {
-					w.table[1].Refresh(rinfo)
-					rinfo.status = "Delete"
-					w.table[0].Refresh(rinfo)
+			case seg := <-chRow:
+				if seg.status != DONE {
+					w.table[0].Refresh(seg, false)
+					speed += seg.speed
+				} else {
+					w.table[0].Refresh(seg, true)
+					seg.eta = "-"
+					w.table[1].Refresh(seg, false)
 				}
 			case url := <-chURL:
 				w.GetDir(url)

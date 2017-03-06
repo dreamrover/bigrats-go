@@ -20,7 +20,7 @@ const (
 	avidemux = "avidemux3_cli"
 )
 
-var chRow chan rowinfo
+var chRow chan *seginfo
 var chURL chan string
 var chDir chan urldir
 var chMsg chan string
@@ -59,7 +59,7 @@ func dumpConfig(file string) {
 }
 
 func init() {
-	chRow = make(chan rowinfo, N)
+	chRow = make(chan *seginfo, N)
 	chURL = make(chan string, N)
 	chDir = make(chan urldir, N)
 	chMsg = make(chan string, N)
@@ -109,7 +109,7 @@ listen:
 			runTask(string(msg[:n]))
 		}
 	}()
-	go runTask(url)
+
 	go scheduler()
 
 	ui.RunEx(os.Args, gui)
@@ -171,18 +171,19 @@ func scheduler() {
 				}
 				if !exist {
 					for _, seg := range t.segs {
-						chRow <- rowinfo{seg, -1, 0, -1, "-", "Waiting"}
+						chRow <- seg
 					}
 					tasks = append(tasks, t)
 				}
 			}
 			sched()
 		case seg := <-chseg:
+			chRow <- seg
 			if seg.status == DONE || seg.status == ERROR {
 				active--
 				sched()
 			}
-			if seg.status == DONE && seg.task.done() && automerge {
+			if seg.status == DONE && seg.task.Done() && automerge {
 				chMrg <- "Merging " + seg.task.title
 				go func() {
 					err := seg.task.mergeSegs(container, autodel)
