@@ -110,6 +110,10 @@ listen:
 		}
 	}()
 
+	if url != "" {
+		go runTask()
+	}
+
 	go scheduler()
 
 	ui.RunEx(os.Args, gui)
