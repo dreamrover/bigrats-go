@@ -50,4 +50,6 @@ The usage of bigrats-go is quite similar with the Windows version except that it
     
 Screenshots:
 
-![image](https://github.com/dreamrover/screenshots/blob/master/bigrats-go-qt5.png)
+![image](https://github.com/dreamrover/screenshots/blob/master/bigrats-dialog.png)
+
+![image](https://github.com/dreamrover/screenshots/blob/master/bigrats-frame.png)
