@@ -111,7 +111,7 @@ listen:
 	}()
 
 	if url != "" {
-		go runTask()
+		go runTask(url)
 	}
 
 	go scheduler()
@@ -162,23 +162,20 @@ func scheduler() {
 		}
 	}
 	for {
+	sel:
 		select {
 		case t := <-chTask:
 			if t != nil {
-				exist := false
 				for _, task := range tasks {
 					if t.tid == task.tid {
-						exist = true
 						chMsg <- "This video is already in task list."
-						break
+						break sel
 					}
 				}
-				if !exist {
-					for _, seg := range t.segs {
-						chRow <- seg
-					}
-					tasks = append(tasks, t)
+				for _, seg := range t.segs {
+					chRow <- seg
 				}
+				tasks = append(tasks, t)
 			}
 			sched()
 		case seg := <-chseg:
