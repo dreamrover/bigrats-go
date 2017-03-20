@@ -81,7 +81,7 @@ func parseURL(url string) (*taskinfo, error) {
 	return &task, nil
 }
 
-func fetchSegment(seg *seginfo, back chan *seginfo) (n int64, err error) {
+func fetchSegment(seg *seginfo, back chan<- *seginfo) (n int64, err error) {
 	defer func() {
 		back <- seg
 	}()
