@@ -87,6 +87,13 @@ func gui() {
 			merger, err = exec.LookPath(avidemux)
 			if err != nil {
 				w.Msgbox(err.Error())
+				automerge = false
+				autodel = false
+				w.checkBox[0].SetChecked(false)
+				w.checkBox[1].SetChecked(false)
+				w.checkBox[1].SetCheckable(false)
+				w.comboBox.SetEnabled(false)
+				return
 			}
 			automerge = true
 			w.checkBox[1].SetCheckable(true)
