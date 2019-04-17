@@ -77,15 +77,25 @@ func gui() {
 
 	w.checkBox[0] = ui.NewCheckBox()
 	w.checkBox[0].SetText("Auto Merge")
-	merger, err = exec.LookPath(avidemux)
-	if err != nil {
+	for _, s := range avidemux {
+		merger, err = exec.LookPath(s)
+		if err == nil {
+			break
+		}
+	}
+	if merger == "" {
 		automerge = false
 	}
 	w.checkBox[0].SetChecked(automerge)
 	w.checkBox[0].OnClickedEx(func(checked bool) {
 		if checked {
-			merger, err = exec.LookPath(avidemux)
-			if err != nil {
+			for _, s := range avidemux {
+				merger, err = exec.LookPath(s)
+				if err == nil {
+					break
+				}
+			}
+			if merger == "" {
 				w.Msgbox(err.Error())
 				automerge = false
 				autodel = false

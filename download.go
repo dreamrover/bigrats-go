@@ -206,7 +206,7 @@ func (task *taskinfo) mergeSegs(format string, delsegs bool) error {
 	args = append(args, "--save")
 	args = append(args, task.dir+task.title+suffix)
 
-	cmd := exec.Command(avidemux, args...)
+	cmd := exec.Command(merger, args...)
 	err := cmd.Run()
 	if err != nil {
 		return err

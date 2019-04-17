@@ -15,9 +15,8 @@ import (
 )
 
 const (
-	seglen   = 1452
-	N        = 32
-	avidemux = "avidemux3_cli"
+	seglen = 1452
+	N      = 32
 )
 
 var chRow chan *seginfo
@@ -27,6 +26,7 @@ var chMsg chan string
 var chTask chan *taskinfo
 var chMrg chan string
 
+var avidemux = [...]string{"avidemux2.6_cli", "avidemux2.7_cli", "avidemux3_cli"}
 var threads int32 = 5
 var automerge bool = true
 var merger string
