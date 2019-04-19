@@ -14,9 +14,8 @@ Please refer to [wiki page](https://github.com/dreamrover/bigrats-go/wiki).
 [How to build bigrats-go from source on Debian/Ubuntu](https://github.com/dreamrover/bigrats-go/wiki/Build-Bigrats-on-Debian-and-Ubuntu)
 
 ## Screenshots:
+![image](https://github.com/dreamrover/screenshots/blob/master/bigrats-ubuntu-18.04.png)
 
 ![image](https://github.com/dreamrover/screenshots/blob/master/bigrats-dialog.png)
 
 ![image](https://github.com/dreamrover/screenshots/blob/master/bigrats-frame.png)
-
-![image](https://github.com/dreamrover/screenshots/blob/master/bigrats-ubuntu-18.04.png)
