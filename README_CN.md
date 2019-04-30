@@ -1,6 +1,6 @@
-[English version](https://github.com/dreamrover/bigrats-go/edit/master/README.md)
-
 # 硕鼠网页视频下载器Linux版
+
+* [**English version**](https://github.com/dreamrover/bigrats-go/edit/master/README.md)
 
 硕鼠下载器官网[flvcd.com](http://www.flvcd.com)仅提供Windows版客户端，对于Linux用户，只好自己动手丰衣足食，于是有了本项目。
 
