@@ -1,6 +1,6 @@
-[**中文版**](https://github.com/dreamrover/bigrats-go/blob/master/README_CN.md)
-
 # Bigrats for Linux
+
+* [**中文版**](https://github.com/dreamrover/bigrats-go/blob/master/README_CN.md)
 
 The official site of Bigrats is [flvcd.com](http://www.flvcd.com), which only provides Windows version.
 
