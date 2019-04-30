@@ -1,4 +1,4 @@
-[中文版](https://github.com/dreamrover/bigrats-go/blob/master/README_CN.md)
+[**中文版**](https://github.com/dreamrover/bigrats-go/blob/master/README_CN.md)
 
 # Bigrats for Linux
 
