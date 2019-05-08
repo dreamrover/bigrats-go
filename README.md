@@ -16,7 +16,8 @@ The installation and configuration of bigrats go is a bit complex comparing with
 
 [How to build bigrats-go from source on Debian/Ubuntu](https://github.com/dreamrover/bigrats-go/wiki/Build-Bigrats-on-Debian-and-Ubuntu)
 
-## Screenshots:
+## Screenshots
+### Ubuntu
 ![image](https://github.com/dreamrover/screenshots/blob/master/bigrats-ubuntu-19.04.png)
-
+### Debian
 ![image](https://github.com/dreamrover/screenshots/blob/master/bigrats-debian-buster.png)
