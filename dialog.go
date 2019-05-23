@@ -1,6 +1,10 @@
 package main
 
-import "github.com/visualfc/goqt/ui"
+import (
+	"strings"
+
+	"github.com/visualfc/goqt/ui"
+)
 
 func (f *Form) Msgbox(msg string) {
 	msgbox := ui.NewMessageBox()
@@ -109,7 +113,10 @@ func (f *Form) GetDir(scriptURL string) {
 			if !xdown {
 				url = line.Text()
 			} else {
-				return
+				// http://www.flvcd.com/xdown.php?id=xxxxxxxx
+				text := line.Text()
+				i := strings.LastIndex(text, "?id=")
+				url = "http://www.flvcd.com/diy/diy00" + text[i+4:] + ".htm"
 			}
 			dir = comboBox.CurrentText()
 			dirs.Add(dir)
