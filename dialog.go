@@ -40,9 +40,18 @@ func (f *Form) GetDir(scriptURL string) {
 	}
 
 	radio[0] = ui.NewRadioButtonWithTextParent("Script URL", f)
-	radio[1] = ui.NewRadioButtonWithTextParent("Video URL", f)
-	radio[0].SetChecked(true)
-	radio[1].SetEnabled(false)
+	radio[1] = ui.NewRadioButtonWithTextParent("Xdown URL", f)
+	if !xdown {
+		radio[0].SetChecked(true)
+	} else {
+		radio[1].SetChecked(true)
+	}
+	radio[0].OnToggled(func(checked bool) {
+		xdown = !checked
+	})
+	radio[1].OnToggled(func(checked bool) {
+		xdown = checked
+	})
 
 	hbox[0].AddWidget(radio[0])
 	hbox[0].AddWidget(radio[1])
@@ -97,7 +106,11 @@ func (f *Form) GetDir(scriptURL string) {
 	buttonBox.SetCenterButtons(true)
 	buttonBox.Button(ui.QDialogButtonBox_Ok).OnClicked(func() {
 		if comboBox.CurrentText() != "" && line.Text() != "" {
-			url = line.Text()
+			if !xdown {
+				url = line.Text()
+			} else {
+				return
+			}
 			dir = comboBox.CurrentText()
 			dirs.Add(dir)
 			chDir <- urldir{url, dir}

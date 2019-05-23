@@ -27,6 +27,7 @@ var chTask chan *taskinfo
 var chMrg chan string
 
 var avidemux = [...]string{"avidemux2.6_cli", "avidemux2.7_cli", "avidemux3_cli"}
+var xdown bool = false
 var threads int32 = 5
 var automerge bool = true
 var merger string
@@ -45,6 +46,7 @@ func loadConfig(file string) {
 	if err != nil {
 		return
 	}
+	xdown = config.Xdown
 	threads = config.Threads
 	automerge = config.Automerge
 	autodel = config.Autodel
@@ -53,7 +55,7 @@ func loadConfig(file string) {
 }
 
 func dumpConfig(file string) {
-	config := Config{threads, automerge, autodel, cindex, dirs}
+	config := Config{xdown, threads, automerge, autodel, cindex, dirs}
 	data, _ := json.MarshalIndent(config, "", "    ")
 	ioutil.WriteFile(file, data, 0644)
 }

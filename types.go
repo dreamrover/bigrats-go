@@ -99,6 +99,7 @@ func (a *DirArray) Len() int {
 }
 
 type Config struct {
+	Xdown     bool
 	Threads   int32
 	Automerge bool
 	Autodel   bool
