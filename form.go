@@ -2,6 +2,7 @@ package main
 
 import (
 	"os/exec"
+	"runtime"
 
 	"github.com/visualfc/goqt/ui"
 )
@@ -200,7 +201,7 @@ func gui() {
 	vbox[0].AddWidget(w.tabWidget)
 
 	w.SetLayout(vbox[0])
-	w.SetWindowTitle("Bigrats for Linux")
+	w.SetWindowTitle("bigrats for " + runtime.GOOS + " " + runtime.GOARCH)
 
 	desktop := ui.NewDesktopWidget()
 	dwidth := desktop.Width()

@@ -45,17 +45,18 @@ const (
 )
 
 func (sz size) String() string {
-	if sz < 0 {
+	switch {
+	case sz < 0:
 		return "-"
-	} else if sz < K {
+	case sz < K:
 		return strconv.FormatInt(int64(sz), 10) + "B"
-	} else if sz < M {
+	case sz < M:
 		return strconv.FormatInt(int64(sz)/K, 10) + "K"
-	} else if sz < G {
+	case sz < G:
 		return fmt.Sprintf("%.1f", float64(sz)/float64(M)) + "M"
-	} else if sz < T {
+	case sz < T:
 		return fmt.Sprintf("%.2f", float64(sz)/float64(G)) + "G"
-	} else {
+	default:
 		return fmt.Sprintf("%.3f", float64(sz)/float64(T)) + "T"
 	}
 }

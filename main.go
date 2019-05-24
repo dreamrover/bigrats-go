@@ -26,7 +26,7 @@ var chMsg chan string
 var chTask chan *taskinfo
 var chMrg chan string
 
-var avidemux = [...]string{"avidemux2.6_cli", "avidemux2.7_cli", "avidemux3_cli"}
+var avidemux = [...]string{"avidemux_cli", "avidemux2.7_cli", "avidemux3_cli"}
 var xdown bool = false
 var threads int32 = 5
 var automerge bool = true
