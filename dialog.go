@@ -140,7 +140,7 @@ func (f *Form) GetDir(scriptURL string) {
 	vbox.AddWidget(buttonBox)
 	dialog.SetLayout(vbox)
 	dialog.SetFixedSizeWithWidthHeight(450, 200)
-	dialog.SetWindowFlags(dialog.WindowFlags() | ui.Qt_WindowStaysOnTopHint)
+	dialog.SetWindowFlags(dialog.WindowFlags() | ui.Qt_Dialog)
 
 	dialog.Show()
 }
