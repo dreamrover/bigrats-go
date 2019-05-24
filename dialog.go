@@ -45,10 +45,10 @@ func (f *Form) GetDir(scriptURL string) {
 
 	radio[0] = ui.NewRadioButtonWithTextParent("Script URL", f)
 	radio[1] = ui.NewRadioButtonWithTextParent("Xdown URL", f)
-	if !xdown {
-		radio[0].SetChecked(true)
-	} else {
+	if scriptURL == "" && xdown {
 		radio[1].SetChecked(true)
+	} else {
+		radio[0].SetChecked(true)
 	}
 	radio[0].OnToggled(func(checked bool) {
 		xdown = !checked
@@ -110,7 +110,7 @@ func (f *Form) GetDir(scriptURL string) {
 	buttonBox.SetCenterButtons(true)
 	buttonBox.Button(ui.QDialogButtonBox_Ok).OnClicked(func() {
 		if comboBox.CurrentText() != "" && line.Text() != "" {
-			if !xdown {
+			if radio[0].IsChecked() {
 				url = line.Text()
 			} else {
 				// http://www.flvcd.com/xdown.php?id=xxxxxxxx
