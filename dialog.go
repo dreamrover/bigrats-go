@@ -84,7 +84,9 @@ func (f *Form) GetDir(scriptURL string) {
 	button.SetSizePolicy(policy)
 	button.SetText("Browse")
 	button.OnClicked(func() {
+		dialog.SetWindowFlags(dialog.WindowFlags() &^ ui.Qt_WindowStaysOnTopHint)
 		filedialog.Show()
+		dialog.Show()
 	})
 	filedialog.OnAccepted(func() {
 		dir = filedialog.Directory().AbsolutePath()
@@ -140,7 +142,6 @@ func (f *Form) GetDir(scriptURL string) {
 	vbox.AddWidget(buttonBox)
 	dialog.SetLayout(vbox)
 	dialog.SetFixedSizeWithWidthHeight(450, 200)
-	dialog.SetWindowFlags(dialog.WindowFlags() | ui.Qt_Dialog)
-
+	dialog.SetWindowFlags(dialog.WindowFlags() | ui.Qt_WindowStaysOnTopHint)
 	dialog.Show()
 }

@@ -15,8 +15,9 @@ import (
 )
 
 const (
-	seglen = 1452
-	N      = 32
+	seglen     = 1452
+	N          = 32
+	MaxThreads = 30
 )
 
 var chRow chan *seginfo
@@ -28,7 +29,7 @@ var chMrg chan string
 
 var avidemux = [...]string{"avidemux_cli", "avidemux2.7_cli", "avidemux3_cli"}
 var xdown bool = false
-var threads int32 = 5
+var threads int32 = 10
 var automerge bool = true
 var merger string
 var autodel bool = true
@@ -36,22 +37,26 @@ var container = "Original"
 var cindex int32 = 0
 var dirs DirArray
 
-func loadConfig(file string) {
+func loadConfig(file string) error {
 	var config Config
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
-		return
+		return err
 	}
 	err = json.Unmarshal(data, &config)
 	if err != nil {
-		return
+		return err
 	}
 	xdown = config.Xdown
 	threads = config.Threads
+	if threads < 0 || threads > MaxThreads {
+		threads = 10
+	}
 	automerge = config.Automerge
 	autodel = config.Autodel
 	cindex = config.CIndex
 	dirs = config.Dirs
+	return nil
 }
 
 func dumpConfig(file string) {

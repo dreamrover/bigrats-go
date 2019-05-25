@@ -68,7 +68,7 @@ func gui() {
 
 	w.spinBox = ui.NewSpinBox()
 	w.spinBox.SetValue(threads)
-	w.spinBox.SetRange(0, 10)
+	w.spinBox.SetRange(0, MaxThreads)
 	w.spinBox.OnValueChangedWithInt32(func(n int32) {
 		if n > threads {
 			chTask <- nil
