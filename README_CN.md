@@ -39,7 +39,7 @@
 现在可以像使用Windows版的硕鼠下载器一样使用了，解析视频之后，点击“硕鼠专用链下载”，即可自动启动客户端，就像在Windows上一样。
 
 ## 从源码编译bigrats-go
-如果你对编译bigrats-go感兴趣，请参考[在Debian和Ubuntu上从源码编译硕鼠下载器](https://github.com/dreamrover/bigrats-go/wiki/%E5%9C%A8Debian%E5%92%8CUbuntu%E4%B8%8A%E4%BB%8E%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E7%A1%95%E9%BC%A0%E4%B8%8B%E8%BD%BD%E5%99%A8)
+如果你对编译bigrats-go感兴趣，请参考：[在Debian和Ubuntu上从源码编译硕鼠下载器](https://github.com/dreamrover/bigrats-go/wiki/%E5%9C%A8Debian%E5%92%8CUbuntu%E4%B8%8A%E4%BB%8E%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E7%A1%95%E9%BC%A0%E4%B8%8B%E8%BD%BD%E5%99%A8)。
 
 ## 屏幕截图
 ### Ubuntu
