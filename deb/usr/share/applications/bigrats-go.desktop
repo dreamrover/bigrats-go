@@ -1,0 +1,16 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+#Encoding=UTF-8
+Name=bigrats-go
+Comment=Bigrats for Linux
+#GenericName=Video Downloader
+#X-GNOME-FullName=Bigrats Webpage Video Downloader for Linux
+Exec=/usr/bin/bigrats-go
+Terminal=false
+#X-MultipleArgs=false
+Type=Application
+Icon=/usr/share/icons/hicolor/128x128/apps/bigrats-go.gif
+Categories=Network;Internet
+StartupNotify=true
+Name[en_US]=bigrats-go

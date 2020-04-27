@@ -1,0 +1,20 @@
+#!/bin/bash
+
+all_handlers=()
+
+for home in `getent passwd | cut -d: -f6`; do
+  [ -d $home/.mozilla/firefox ] && all_handlers+=(`find $home/.mozilla/firefox -maxdepth 2 -type f -regextype grep -regex "$home/\.mozilla/firefox/[a-z0-9]\{8\}\.default[^/\\]*/handlers.json$"`)
+done
+
+#echo ${all_handlers[@]} ${#all_handlers[*]}
+
+if [ ${#all_handlers[*]} -eq 0 ]; then
+  echo "handlers.json for firefox not found, you need to configure it manually."
+  exit 1
+fi
+
+for handlers in ${all_handlers[@]}; do
+  #echo $handlers
+  content=`jq -c '.schemes .bigrats={action:2,handlers:[{name:"bigrats-go",path:"/usr/bin/bigrats-go"}]}' $handlers`
+  echo $content > $handlers
+done

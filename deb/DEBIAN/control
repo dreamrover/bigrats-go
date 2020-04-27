@@ -1,0 +1,16 @@
+Package: bigrats-go
+Version: 0.2
+Architecture: amd64
+Maintainer: dreamrover < aenuyh@gmail.com >
+Pre-depends: jq (>=1.5), libqt5core5a (>=5.7), libqt5gui5 (>=5.7), libqt5widgets5 (>=5.7), libqt5printsupport5 (>=5.7)
+Depends: avidemux-common | avidemux2.6-common | avidemux2.7-common, avidemux-cli | avidemux2.6-cli | avidemux2.7-cli, avidemux-plugins | avidemux2.6-plugins-cli | avidemux2.7-plugins-cli
+Recommends: avidemux-qt | avidemux2.6-qt | avidemux2.7-qt
+Installed-Size: 10540
+Section: net
+Priority: extra
+Homepage: https://github.com/dreamrover/bigrats-go
+Suggests:
+Provides: bigrats-go, libqtdrv.ui.so
+Description: Bigrats Webpage Video Downloader for Linux
+ The official site of Bigrats is flvcd.com, which only provides Windows version.
+ This project is the Linux version of Bigrat written in Golang with GUI by deploying GoQt, and uses avidemux to merge video segments.
